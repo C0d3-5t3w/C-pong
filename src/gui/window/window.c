@@ -25,3 +25,8 @@ void window_cleanup(void) {
 int window_get_width(void) { return window_width; }
 
 int window_get_height(void) { return window_height; }
+
+void window_clear(void) {
+  // Clear the terminal screen
+  printf("\033[2J\033[H");
+}
