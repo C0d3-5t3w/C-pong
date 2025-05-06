@@ -1,0 +1,57 @@
+CompileFlags:
+  # Treat code as C, not C++
+  Add: [-xc, -std=c99, -Wall, -Wextra, -D_USE_MATH_DEFINES]
+  # Include paths
+  Includes:
+    - pkg/
+    - src/
+    - .
+
+# Diagnostics configuration
+Diagnostics:
+  # Tweak specific diagnostics
+  Suppress: 
+    - unused-parameter
+    - missing-prototypes
+  ClangTidy:
+    Add: 
+      - readability-*
+      - performance-*
+      - portability-*
+    Remove:
+      - readability-magic-numbers
+      - readability-braces-around-statements
+
+# Index configuration
+Index:
+  Background: Build
+  StandardLibrary: Yes
+
+# Format style options
+---
+If:
+  PathMatch: .*\.c
+Style:
+  BasedOnStyle: LLVM
+  IndentWidth: 2
+  TabWidth: 2
+  UseTab: Never
+  ColumnLimit: 80
+  AlignAfterOpenBracket: Align
+  AllowShortFunctionsOnASingleLine: Empty
+  BreakBeforeBraces: Linux
+  IndentCaseLabels: false
+  AlignTrailingComments: true
+  AllowShortIfStatementsOnASingleLine: false
+  IndentPPDirectives: AfterHash
+  SortIncludes: false
+  FixNamespaceComments: false
+---
+If:
+  PathMatch: .*\.h
+Style:
+  BasedOnStyle: LLVM
+  IndentWidth: 2
+  TabWidth: 2
+  UseTab: Never
+  ColumnLimit: 80
