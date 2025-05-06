@@ -10,27 +10,17 @@ void player2_controls_init(void) {
 }
 
 void player2_controls_handle_event(Event *event) {
-  if (event->type == EVENT_KEYDOWN) {
-    switch (event->key.sym) {
-    case KEY_UP:
-      moveUp = true;
-      break;
-    case KEY_DOWN:
-      moveDown = true;
-      break;
-    }
-  } else if (event->type == EVENT_KEYUP) {
-    switch (event->key.sym) {
-    case KEY_UP:
-      moveUp = false;
-      break;
-    case KEY_DOWN:
-      moveDown = false;
-      break;
-    }
-  }
+  // Check current key states for continuous movement
+  moveUp = is_key_pressed(KEY_UP);
+  moveDown = is_key_pressed(KEY_DOWN);
 }
 
-bool player2_controls_is_moving_up(void) { return moveUp; }
+bool player2_controls_is_moving_up(void) { 
+  // Check direct key state for more responsive controls
+  return is_key_pressed(KEY_UP) || moveUp;
+}
 
-bool player2_controls_is_moving_down(void) { return moveDown; }
+bool player2_controls_is_moving_down(void) { 
+  // Check direct key state for more responsive controls
+  return is_key_pressed(KEY_DOWN) || moveDown;
+}

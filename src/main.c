@@ -13,6 +13,9 @@ GameState currentState = STATE_MENU;
 static struct termios old_term, new_term;
 static struct timeval start_time;
 
+// Add key state tracking
+static bool key_states[256] = {false};
+
 // Initialize non-blocking input
 static void init_input(void) {
     tcgetattr(STDIN_FILENO, &old_term);
@@ -23,6 +26,9 @@ static void init_input(void) {
     
     // Initialize time reference
     gettimeofday(&start_time, NULL);
+    
+    // Clear key states
+    memset(key_states, 0, sizeof(key_states));
 }
 
 // Restore terminal settings
@@ -59,16 +65,50 @@ static int get_key(void) {
 
 bool poll_event(Event* event) {
     int key = get_key();
-    if (key == -1) return false;
+    if (key == -1) {
+        // No new key press, but update event with current key states for continuous movement
+        event->type = EVENT_NONE;
+        return false;
+    }
     
     if (key == EVENT_QUIT) {
         event->type = EVENT_QUIT;
         return true;
     }
     
+    // Set key state to pressed
+    if (key < 256) {
+        key_states[key] = true;
+    }
+    
     event->type = EVENT_KEYDOWN;
     event->key.sym = key;
     return true;
+}
+
+// Add function to check if a key is pressed
+bool is_key_pressed(int key) {
+    if (key >= 0 && key < 256) {
+        return key_states[key];
+    }
+    return false;
+}
+
+// Add function to update key states in the main loop
+void update_key_states(void) {
+    // Check for any released keys (simplified approach)
+    // In terminal mode, we don't get key up events, so this is a compromise
+    
+    // Process new events to update key states
+    Event temp_event;
+    while (poll_event(&temp_event)) {
+        if (temp_event.type == EVENT_KEYDOWN) {
+            int key = temp_event.key.sym;
+            if (key >= 0 && key < 256) {
+                key_states[key] = true;
+            }
+        }
+    }
 }
 
 unsigned int get_ticks(void) {
@@ -118,26 +158,30 @@ int main(int argc, char *argv[]) {
     while (running) {
         frameStart = get_ticks();
 
-        // Process input
-        while (poll_event(&event)) {
-            if (event.type == EVENT_QUIT) {
-                running = false;
-            }
+        // Update key states first
+        update_key_states();
 
-            switch (currentState) {
-            case STATE_MENU:
-                menu_handle_event(&event);
-                break;
-            case STATE_GAME:
-                game_handle_event(&event);
-                break;
-            case STATE_SETTINGS:
-                settings_handle_event(&event);
-                break;
-            case STATE_EXIT:
-                running = false;
-                break;
-            }
+        // Process any new events
+        event.type = EVENT_NONE; // Set a default type
+        
+        if (is_key_pressed(EVENT_QUIT)) {
+            running = false;
+        }
+
+        // Update states based on current key states
+        switch (currentState) {
+        case STATE_MENU:
+            menu_handle_event(&event);
+            break;
+        case STATE_GAME:
+            game_handle_event(&event);
+            break;
+        case STATE_SETTINGS:
+            settings_handle_event(&event);
+            break;
+        case STATE_EXIT:
+            running = false;
+            break;
         }
 
         // Update game state

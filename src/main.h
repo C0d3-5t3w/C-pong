@@ -34,9 +34,10 @@ typedef struct {
 } Event;
 
 // Event types
+#define EVENT_NONE    0
 #define EVENT_KEYDOWN 1
-#define EVENT_KEYUP 2
-#define EVENT_QUIT 3
+#define EVENT_KEYUP   2
+#define EVENT_QUIT    3
 
 // Key codes
 #define KEY_UP     1
@@ -56,6 +57,7 @@ extern GameState currentState;
 
 // Function prototypes
 bool poll_event(Event* event);
+bool is_key_pressed(int key); // Add this function declaration
 void delay_milliseconds(int milliseconds);
 unsigned int get_ticks(void);
 

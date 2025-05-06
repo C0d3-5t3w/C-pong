@@ -1,0 +1,7 @@
+difficulty 2
+player1_color 0
+player2_color 2
+cpu_color 1
+ball_color 6
+sound_enabled 1
+sound_volume 0.7
