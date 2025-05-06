@@ -131,8 +131,8 @@ void game_update(void) {
 
 void game_render(void) {
   // Draw middle line
-  for (int row = 0; row < WINDOW_HEIGHT; row += 2) {
-    gui_draw_text("|", WINDOW_WIDTH / 2, row, false);
+  for (int row = 2; row < WINDOW_HEIGHT - 2; row += 2) {
+    gui_draw_text("|", WINDOW_WIDTH / 2 - 1, row, false);
   }
 
   // Draw ball

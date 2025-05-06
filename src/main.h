@@ -9,8 +9,9 @@
 #include <string.h>
 #include <unistd.h> // for usleep
 
+// Use a smaller, fixed window size for better stability
 #define WINDOW_WIDTH 80
-#define WINDOW_HEIGHT 24
+#define WINDOW_HEIGHT 25
 #define FPS 10
 #define FRAME_DELAY (1000 / FPS)
 

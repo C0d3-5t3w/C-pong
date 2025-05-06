@@ -1,10 +1,10 @@
 CC = clang
 CFLAGS = -Wall -Wextra -std=c99 -D_USE_MATH_DEFINES
-LDFLAGS = -lSDL2 -lSDL2_ttf -lm -lyaml -ljson-c
+LDFLAGS = -lm
 
 SRC_DIR = src
 BUILD_DIR = bin
-PKG_DIR = pkg/*
+PKG_DIR = pkg
 
 SRCS = $(shell find $(SRC_DIR) -name '*.c')
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
@@ -42,6 +42,6 @@ help:
 	@echo "  make help       Show this help message"
 	@echo ""
 	@echo "Environment Variables:"
-	@echo "  CC              Compiler to use (default: gcc)"
+	@echo "  CC              Compiler to use (default: clang)"
 	@echo "  CFLAGS          Compiler flags (default: -Wall -Wextra -std=c99 -D_USE_MATH_DEFINES)"
-	@echo "  LDFLAGS         Linker flags (default: -lSDL2 -lSDL2_ttf -lm -lyaml -ljson-c)"
+	@echo "  LDFLAGS         Linker flags (default: -lm)"

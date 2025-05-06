@@ -1,6 +1,6 @@
 # C Pong
 
-A classic Pong game implemented in pure C using SDL2.
+A classic Pong game implemented in pure C.
 
 ## Features
 
@@ -11,8 +11,6 @@ A classic Pong game implemented in pure C using SDL2.
 
 ## Dependencies
 
-- SDL2
-- SDL2_ttf
 - libyaml
 - json-c
 
