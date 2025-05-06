@@ -38,17 +38,19 @@ void cpu_update(CPU *cpu, Ball *ball) {
     // Only move if the ball is moving towards the CPU
     if (ball->velocityX > 0) {
       // Move towards the predicted position
-      if (targetY < (float)(cpu->y + cpu->height / 2) - 1.0F) {
+      float paddleCenterY = (float)cpu->y + (float)cpu->height / 2.0F; // Fixed integer division
+      if (targetY < paddleCenterY - 1.0F) {
         cpu->y -= cpu->speed;
-      } else if (targetY > (float)(cpu->y + cpu->height / 2) + 1.0F) {
+      } else if (targetY > paddleCenterY + 1.0F) {
         cpu->y += cpu->speed;
       }
     }
   } else {
     // Hard difficulty: better prediction, faster movement
-    if (targetY < (float)(cpu->y + cpu->height / 2) - 0.5F) {
+    float paddleCenterY = (float)cpu->y + (float)cpu->height / 2.0F; // Fixed integer division
+    if (targetY < paddleCenterY - 0.5F) {
       cpu->y -= cpu->speed;
-    } else if (targetY > (float)(cpu->y + cpu->height / 2) + 0.5F) {
+    } else if (targetY > paddleCenterY + 0.5F) {
       cpu->y += cpu->speed;
     }
   }

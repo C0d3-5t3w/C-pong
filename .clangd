@@ -10,12 +10,3 @@ Diagnostics:
 Index:
   Background: Build
   StandardLibrary: Yes
-
-# Use simpler formatting style
----
-Style:
-  ColumnLimit: 80
-  IndentWidth: 2
-  ContinuationIndentWidth: 2
-  UseTab: Never
-  SortIncludes: false

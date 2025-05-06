@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "../main.h"  // Added include for Color definition
 #include <stdbool.h>
 
 // Color options (moved from settings.h)
