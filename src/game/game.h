@@ -4,10 +4,6 @@
 #include "../main.h"
 #include <stdbool.h>
 
-// Forward declarations
-typedef struct Player Player;
-typedef struct CPU CPU;
-
 // Ball structure
 typedef struct {
   float x;
@@ -17,6 +13,27 @@ typedef struct {
   int size;
   Color color;
 } Ball;
+
+// Player structure definition (moved from player1.h)
+typedef struct {
+  int x;
+  int y;
+  int width;
+  int height;
+  int speed;
+  Color color;
+} Player;
+
+// CPU structure definition (moved from cpu.h)
+typedef struct {
+  int x;
+  int y;
+  int width;
+  int height;
+  int speed;
+  Color color;
+  int difficulty; // 1=Easy, 2=Medium, 3=Hard
+} CPU;
 
 // Game mode enum
 typedef enum { MODE_PLAYER_VS_CPU, MODE_PLAYER_VS_PLAYER } GameMode;

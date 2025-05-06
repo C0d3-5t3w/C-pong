@@ -2,17 +2,9 @@
 #define PLAYER1_H
 
 #include "../../main.h"
+#include "../game.h"
 
-// Player structure
-typedef struct {
-  int x;
-  int y;
-  int width;
-  int height;
-  int speed;
-  Color color;
-} Player;
-
+// Function prototypes
 void player1_init(Player *player);
 void player1_update(Player *player);
 void player1_render(Player *player);

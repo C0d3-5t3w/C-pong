@@ -14,29 +14,29 @@ void menu_update(void) {
 }
 
 void menu_render(void) {
-  SDL_Color white = {255, 255, 255, 255};
-  SDL_Color highlighted = {255, 255, 0, 255};
-
   // Draw title
-  canvas_draw_text("C PONG", WINDOW_WIDTH / 2, 100, white, true);
+  gui_draw_text("C PONG", WINDOW_WIDTH / 2, 5, true);
 
   // Draw menu options
-  int yPos = 200;
+  int yPos = 10;
   for (int i = 0; i < MENU_OPTION_COUNT; i++) {
-    SDL_Color color = (i == selectedOption) ? highlighted : white;
-    canvas_draw_text(menuOptionTexts[i], WINDOW_WIDTH / 2, yPos, color, true);
-    yPos += 50;
+    // Use > character to indicate selected item
+    if (i == (int)selectedOption) {
+      gui_draw_text(">", WINDOW_WIDTH / 2 - 10, yPos, false);
+    }
+    gui_draw_text(menuOptionTexts[i], WINDOW_WIDTH / 2, yPos, true);
+    yPos += 3;
   }
 
   // Draw controls help
-  canvas_draw_text("Use UP/DOWN arrows to select, ENTER to confirm",
-                   WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50, white, true);
+  gui_draw_text("Use UP/DOWN arrows to select, ENTER to confirm",
+                WINDOW_WIDTH / 2, WINDOW_HEIGHT - 2, true);
 }
 
-void menu_handle_event(SDL_Event *event) {
-  if (event->type == SDL_KEYDOWN) {
-    switch (event->key.keysym.sym) {
-    case SDLK_UP:
+void menu_handle_event(Event *event) {
+  if (event->type == EVENT_KEYDOWN) {
+    switch (event->key.sym) {
+    case KEY_UP:
       if (selectedOption > 0) {
         selectedOption = (MenuOption)(selectedOption - 1);
       } else {
@@ -44,7 +44,7 @@ void menu_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_DOWN:
+    case KEY_DOWN:
       if (selectedOption < MENU_EXIT) {
         selectedOption = (MenuOption)(selectedOption + 1);
       } else {
@@ -52,8 +52,7 @@ void menu_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_RETURN:
-    case SDLK_KP_ENTER:
+    case KEY_RETURN:
       // Handle selection
       switch (selectedOption) {
       case MENU_PLAY_VS_CPU:

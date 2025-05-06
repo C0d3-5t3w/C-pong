@@ -23,31 +23,28 @@ static const char *difficultyTexts[] = {"Easy", "Medium", "Hard"};
 static const char *colorTexts[] = {"Red",  "Green",   "Blue", "Yellow",
                                    "Cyan", "Magenta", "White"};
 
-static const SDL_Color colorValues[] = {
-    {255, 0, 0, 255},    // Red
-    {0, 255, 0, 255},    // Green
-    {0, 0, 255, 255},    // Blue
-    {255, 255, 0, 255},  // Yellow
-    {0, 255, 255, 255},  // Cyan
-    {255, 0, 255, 255},  // Magenta
-    {255, 255, 255, 255} // White
-};
-
 void settings_init(void) {
-  cpuDifficulty = cpu_get_difficulty();
+  cpuDifficulty = config_get_difficulty();
 
   // Load color settings
   config_get_colors(&p1ColorOption, &p2ColorOption, &cpuColorOption,
                     &ballColorOption);
 
   // Apply colors
-  player1_set_color(settings_get_color(p1ColorOption));
-  player2_set_color(settings_get_color(p2ColorOption));
-  cpu_set_color(settings_get_color(cpuColorOption));
+  Color color;
+  
+  config_get_real_color(p1ColorOption, &color);
+  player1_set_color(color);
+  
+  config_get_real_color(p2ColorOption, &color);
+  player2_set_color(color);
+  
+  config_get_real_color(cpuColorOption, &color);
+  cpu_set_color(color);
 
   Ball *ball = game_get_ball();
   if (ball) {
-    ball->color = settings_get_color(ballColorOption);
+    config_get_real_color(ballColorOption, &ball->color);
   }
 
   selectedOption = SETTING_DIFFICULTY;
@@ -58,46 +55,41 @@ void settings_update(void) {
 }
 
 void settings_render(void) {
-  SDL_Color white = {255, 255, 255, 255};
-  SDL_Color highlighted = {255, 255, 0, 255};
-
   // Draw title
-  canvas_draw_text("SETTINGS", WINDOW_WIDTH / 2, 60, white, true);
+  gui_draw_text("SETTINGS", WINDOW_WIDTH / 2, 2, true);
 
-  int yPos = 150;
-  int yStep = 60;
+  int yPos = 5;
+  int yStep = 3;
 
   // Draw setting options
   for (int i = 0; i < SETTING_OPTION_COUNT; i++) {
-    SDL_Color color = (i == selectedOption) ? highlighted : white;
-    canvas_draw_text(settingOptionTexts[i], WINDOW_WIDTH / 3, yPos, color,
-                     false);
+    // Use > character to indicate selected item
+    if (i == (int)selectedOption) {
+      gui_draw_text(">", 5, yPos, false);
+    }
+    
+    gui_draw_text(settingOptionTexts[i], 8, yPos, false);
 
     // Draw current value
     switch (i) {
     case SETTING_DIFFICULTY:
-      canvas_draw_text(difficultyTexts[cpuDifficulty - 1], 2 * WINDOW_WIDTH / 3,
-                       yPos, color, false);
+      gui_draw_text(difficultyTexts[cpuDifficulty - 1], 30, yPos, false);
       break;
 
     case SETTING_PLAYER1_COLOR:
-      canvas_draw_text(colorTexts[p1ColorOption], 2 * WINDOW_WIDTH / 3, yPos,
-                       settings_get_color(p1ColorOption), false);
+      gui_draw_text(colorTexts[p1ColorOption], 30, yPos, false);
       break;
 
     case SETTING_PLAYER2_COLOR:
-      canvas_draw_text(colorTexts[p2ColorOption], 2 * WINDOW_WIDTH / 3, yPos,
-                       settings_get_color(p2ColorOption), false);
+      gui_draw_text(colorTexts[p2ColorOption], 30, yPos, false);
       break;
 
     case SETTING_CPU_COLOR:
-      canvas_draw_text(colorTexts[cpuColorOption], 2 * WINDOW_WIDTH / 3, yPos,
-                       settings_get_color(cpuColorOption), false);
+      gui_draw_text(colorTexts[cpuColorOption], 30, yPos, false);
       break;
 
     case SETTING_BALL_COLOR:
-      canvas_draw_text(colorTexts[ballColorOption], 2 * WINDOW_WIDTH / 3, yPos,
-                       settings_get_color(ballColorOption), false);
+      gui_draw_text(colorTexts[ballColorOption], 30, yPos, false);
       break;
 
     case SETTING_BACK:
@@ -109,14 +101,14 @@ void settings_render(void) {
   }
 
   // Draw controls help
-  canvas_draw_text("UP/DOWN to select, LEFT/RIGHT to change, ENTER to confirm",
-                   WINDOW_WIDTH / 2, WINDOW_HEIGHT - 30, white, true);
+  gui_draw_text("UP/DOWN to select, LEFT/RIGHT to change, ENTER to confirm",
+                WINDOW_WIDTH / 2, WINDOW_HEIGHT - 1, true);
 }
 
-void settings_handle_event(SDL_Event *event) {
-  if (event->type == SDL_KEYDOWN) {
-    switch (event->key.keysym.sym) {
-    case SDLK_UP:
+void settings_handle_event(Event *event) {
+  if (event->type == EVENT_KEYDOWN) {
+    switch (event->key.sym) {
+    case KEY_UP:
       if (selectedOption > 0) {
         selectedOption = (SettingOption)(selectedOption - 1);
       } else {
@@ -124,7 +116,7 @@ void settings_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_DOWN:
+    case KEY_DOWN:
       if (selectedOption < SETTING_BACK) {
         selectedOption = (SettingOption)(selectedOption + 1);
       } else {
@@ -132,7 +124,7 @@ void settings_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_LEFT:
+    case KEY_LEFT:
       // Change selected option value
       switch (selectedOption) {
       case SETTING_DIFFICULTY:
@@ -148,7 +140,11 @@ void settings_handle_event(SDL_Event *event) {
           p1ColorOption--;
         else
           p1ColorOption = COLOR_COUNT - 1;
-        player1_set_color(settings_get_color(p1ColorOption));
+        {
+          Color color;
+          config_get_real_color(p1ColorOption, &color);
+          player1_set_color(color);
+        }
         break;
 
       case SETTING_PLAYER2_COLOR:
@@ -156,7 +152,11 @@ void settings_handle_event(SDL_Event *event) {
           p2ColorOption--;
         else
           p2ColorOption = COLOR_COUNT - 1;
-        player2_set_color(settings_get_color(p2ColorOption));
+        {
+          Color color;
+          config_get_real_color(p2ColorOption, &color);
+          player2_set_color(color);
+        }
         break;
 
       case SETTING_CPU_COLOR:
@@ -164,7 +164,11 @@ void settings_handle_event(SDL_Event *event) {
           cpuColorOption--;
         else
           cpuColorOption = COLOR_COUNT - 1;
-        cpu_set_color(settings_get_color(cpuColorOption));
+        {  
+          Color color;
+          config_get_real_color(cpuColorOption, &color);
+          cpu_set_color(color);
+        }
         break;
 
       case SETTING_BALL_COLOR:
@@ -172,9 +176,11 @@ void settings_handle_event(SDL_Event *event) {
           ballColorOption--;
         else
           ballColorOption = COLOR_COUNT - 1;
-        Ball *ball = game_get_ball();
-        if (ball) {
-          ball->color = settings_get_color(ballColorOption);
+        {
+          Ball *ball = game_get_ball();
+          if (ball) {
+            config_get_real_color(ballColorOption, &ball->color);
+          }
         }
         break;
 
@@ -183,7 +189,7 @@ void settings_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_RIGHT:
+    case KEY_RIGHT:
       // Change selected option value
       switch (selectedOption) {
       case SETTING_DIFFICULTY:
@@ -199,7 +205,11 @@ void settings_handle_event(SDL_Event *event) {
           p1ColorOption++;
         else
           p1ColorOption = 0;
-        player1_set_color(settings_get_color(p1ColorOption));
+        {
+          Color color;
+          config_get_real_color(p1ColorOption, &color);
+          player1_set_color(color);
+        }
         break;
 
       case SETTING_PLAYER2_COLOR:
@@ -207,7 +217,11 @@ void settings_handle_event(SDL_Event *event) {
           p2ColorOption++;
         else
           p2ColorOption = 0;
-        player2_set_color(settings_get_color(p2ColorOption));
+        {
+          Color color;
+          config_get_real_color(p2ColorOption, &color);
+          player2_set_color(color);
+        }
         break;
 
       case SETTING_CPU_COLOR:
@@ -215,7 +229,11 @@ void settings_handle_event(SDL_Event *event) {
           cpuColorOption++;
         else
           cpuColorOption = 0;
-        cpu_set_color(settings_get_color(cpuColorOption));
+        {
+          Color color;
+          config_get_real_color(cpuColorOption, &color);
+          cpu_set_color(color);
+        }
         break;
 
       case SETTING_BALL_COLOR:
@@ -223,9 +241,11 @@ void settings_handle_event(SDL_Event *event) {
           ballColorOption++;
         else
           ballColorOption = 0;
-        Ball *ball = game_get_ball();
-        if (ball) {
-          ball->color = settings_get_color(ballColorOption);
+        {
+          Ball *ball = game_get_ball();
+          if (ball) {
+            config_get_real_color(ballColorOption, &ball->color);
+          }
         }
         break;
 
@@ -234,8 +254,7 @@ void settings_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_RETURN:
-    case SDLK_KP_ENTER:
+    case KEY_RETURN:
       if (selectedOption == SETTING_BACK) {
         // Save settings
         settings_save();
@@ -245,7 +264,7 @@ void settings_handle_event(SDL_Event *event) {
       }
       break;
 
-    case SDLK_ESCAPE:
+    case KEY_ESCAPE:
       // Save settings
       settings_save();
 
@@ -278,11 +297,4 @@ bool settings_load(void) {
   cpuDifficulty = config_get_difficulty();
 
   return true;
-}
-
-SDL_Color settings_get_color(ColorOption color) {
-  if (color >= 0 && color < COLOR_COUNT) {
-    return colorValues[color];
-  }
-  return (SDL_Color){255, 255, 255, 255};
 }

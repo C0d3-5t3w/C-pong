@@ -1,4 +1,5 @@
 #include "controls.h"
+#include "../../../main.h"
 
 static bool moveUp = false;
 static bool moveDown = false;
@@ -8,22 +9,22 @@ void player2_controls_init(void) {
   moveDown = false;
 }
 
-void player2_controls_handle_event(SDL_Event *event) {
-  if (event->type == SDL_KEYDOWN) {
-    switch (event->key.keysym.sym) {
-    case SDLK_UP:
+void player2_controls_handle_event(Event *event) {
+  if (event->type == EVENT_KEYDOWN) {
+    switch (event->key.sym) {
+    case KEY_UP:
       moveUp = true;
       break;
-    case SDLK_DOWN:
+    case KEY_DOWN:
       moveDown = true;
       break;
     }
-  } else if (event->type == SDL_KEYUP) {
-    switch (event->key.keysym.sym) {
-    case SDLK_UP:
+  } else if (event->type == EVENT_KEYUP) {
+    switch (event->key.sym) {
+    case KEY_UP:
       moveUp = false;
       break;
-    case SDLK_DOWN:
+    case KEY_DOWN:
       moveDown = false;
       break;
     }

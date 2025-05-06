@@ -1,4 +1,10 @@
 #include "main.h"
+#include "gui/gui.h"
+#include "game/game.h"
+#include "game/menu/menu.h"
+#include "game/menu/settings/settings.h"
+#include "game/scores/scores.h"
+#include "config/config.h"
 #include <termios.h>
 #include <fcntl.h>
 #include <sys/time.h>
@@ -26,14 +32,14 @@ static void cleanup_input(void) {
 
 // Get key input
 static int get_key(void) {
-    int ch = getchar();
-    if (ch == EOF) return -1;
+    int character = getchar();
+    if (character == EOF) return -1;
     
-    switch (ch) {
+    switch (character) {
         case 27: // Escape sequence
             if (getchar() == '[') {
-                ch = getchar();
-                switch (ch) {
+                character = getchar();
+                switch (character) {
                     case 'A': return KEY_UP;
                     case 'B': return KEY_DOWN;
                     case 'C': return KEY_RIGHT;
@@ -48,7 +54,7 @@ static int get_key(void) {
         case 'q': case 'Q': return EVENT_QUIT;
     }
     
-    return ch;
+    return character;
 }
 
 bool poll_event(Event* event) {
@@ -72,8 +78,8 @@ unsigned int get_ticks(void) {
            (now.tv_usec - start_time.tv_usec) / 1000;
 }
 
-void delay_ms(int ms) {
-    usleep(ms * 1000);
+void delay_milliseconds(int milliseconds) {
+    usleep(milliseconds * 1000);
 }
 
 int main(int argc, char *argv[]) {
@@ -171,7 +177,7 @@ int main(int argc, char *argv[]) {
         // Cap the frame rate
         frameTime = get_ticks() - frameStart;
         if (FRAME_DELAY > frameTime) {
-            delay_ms(FRAME_DELAY - frameTime);
+            delay_milliseconds(FRAME_DELAY - frameTime);
         }
     }
 

@@ -34,8 +34,8 @@ void game_cleanup(void) { scores_save(); }
 
 void game_reset(void) {
   // Reset ball position
-  ball.x = WINDOW_WIDTH / 2.0f;
-  ball.y = WINDOW_HEIGHT / 2.0f;
+  ball.x = WINDOW_WIDTH / 2.0F;
+  ball.y = WINDOW_HEIGHT / 2.0F;
 
   // Set random initial velocity
   float angle = (((float)rand() / RAND_MAX) * M_PI / 2) - M_PI / 4;
@@ -43,17 +43,17 @@ void game_reset(void) {
     angle += M_PI;
   }
 
-  float speed = 1.0f;
-  ball.velocityX = speed * cos(angle);
-  ball.velocityY = speed * sin(angle) * 0.5f; // Adjust for console aspect ratio
+  float speed = 1.0F;
+  ball.velocityX = speed * (float)cos((double)angle);
+  ball.velocityY = speed * (float)sin((double)angle) * 0.5F; // Adjust for console aspect ratio
 }
 
 // Check if two rectangles intersect
-static bool rectangles_intersect(Rectangle r1, Rectangle r2) {
-    return (r1.x < r2.x + r2.w &&
-            r1.x + r1.w > r2.x &&
-            r1.y < r2.y + r2.h &&
-            r1.y + r1.h > r2.y);
+static bool rectangles_intersect(Rectangle rect1, Rectangle rect2) {
+    return (rect1.x < rect2.x + rect2.w &&
+            rect1.x + rect1.w > rect2.x &&
+            rect1.y < rect2.y + rect2.h &&
+            rect1.y + rect1.h > rect2.y);
 }
 
 void game_update(void) {
@@ -95,7 +95,7 @@ void game_update(void) {
       ball.velocityX = -ball.velocityX;
       // Add some variation based on where the ball hit the paddle
       float hitPosition = (ball.y - player1.y) / player1.height;
-      ball.velocityY = (hitPosition - 0.5f) * 2.0f;
+      ball.velocityY = (hitPosition - 0.5F) * 2.0F;
     }
   }
 
@@ -109,7 +109,7 @@ void game_update(void) {
       } else {
         hitPosition = (ball.y - player2.y) / player2.height;
       }
-      ball.velocityY = (hitPosition - 0.5f) * 2.0f;
+      ball.velocityY = (hitPosition - 0.5F) * 2.0F;
     }
   }
 
@@ -131,8 +131,8 @@ void game_update(void) {
 
 void game_render(void) {
   // Draw middle line
-  for (int y = 0; y < WINDOW_HEIGHT; y += 2) {
-    gui_draw_text("|", WINDOW_WIDTH / 2, y, false);
+  for (int row = 0; row < WINDOW_HEIGHT; row += 2) {
+    gui_draw_text("|", WINDOW_WIDTH / 2, row, false);
   }
 
   // Draw ball

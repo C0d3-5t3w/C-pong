@@ -50,37 +50,37 @@ void gui_present(void) {
     fflush(stdout);
 }
 
-void gui_draw_rectangle(int x, int y, int w, int h, bool filled) {
+void gui_draw_rectangle(int posX, int posY, int width, int height, bool filled) {
     // Ensure coordinates are within bounds
-    if (x < 0 || y < 0 || x >= WINDOW_WIDTH || y >= WINDOW_HEIGHT) {
+    if (posX < 0 || posY < 0 || posX >= WINDOW_WIDTH || posY >= WINDOW_HEIGHT) {
         return;
     }
     
     char fillChar = filled ? '#' : '+';
     
     // Draw the rectangle
-    for (int i = y; i < y + h && i < WINDOW_HEIGHT; i++) {
-        for (int j = x; j < x + w && j < WINDOW_WIDTH; j++) {
-            if (filled || i == y || i == y + h - 1 || j == x || j == x + w - 1) {
+    for (int i = posY; i < posY + height && i < WINDOW_HEIGHT; i++) {
+        for (int j = posX; j < posX + width && j < WINDOW_WIDTH; j++) {
+            if (filled || i == posY || i == posY + height - 1 || j == posX || j == posX + width - 1) {
                 buffer[i][j] = fillChar;
             }
         }
     }
 }
 
-void gui_draw_text(const char* text, int x, int y, bool centered) {
-    if (y < 0 || y >= WINDOW_HEIGHT) {
+void gui_draw_text(const char* text, int posX, int posY, bool centered) {
+    if (posY < 0 || posY >= WINDOW_HEIGHT) {
         return;
     }
     
     int len = strlen(text);
     if (centered) {
-        x = x - len / 2;
+        posX = posX - len / 2;
     }
     
     for (int i = 0; i < len; i++) {
-        if (x + i >= 0 && x + i < WINDOW_WIDTH) {
-            buffer[y][x + i] = text[i];
+        if (posX + i >= 0 && posX + i < WINDOW_WIDTH) {
+            buffer[posY][posX + i] = text[i];
         }
     }
 }

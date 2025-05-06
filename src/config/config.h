@@ -1,9 +1,19 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "../game/menu/settings/settings.h"
-#include <SDL2/SDL.h>
 #include <stdbool.h>
+
+// Color options (moved from settings.h)
+typedef enum {
+  COLOR_RED,
+  COLOR_GREEN,
+  COLOR_BLUE,
+  COLOR_YELLOW,
+  COLOR_CYAN,
+  COLOR_MAGENTA,
+  COLOR_WHITE,
+  COLOR_COUNT
+} ColorOption;
 
 // Function prototypes
 bool config_init(void);
@@ -24,5 +34,8 @@ void config_set_sound_enabled(bool enabled);
 
 float config_get_sound_volume(void);
 void config_set_sound_volume(float volume);
+
+// Get actual color from color option
+void config_get_real_color(ColorOption option, Color* outColor);
 
 #endif // CONFIG_H

@@ -3,15 +3,15 @@
 #include "../../main.h"
 #include "ai/ai.h"
 
-static int difficulty = 2;                    // Default: Medium
-static SDL_Color cpuColor = {0, 255, 0, 255}; // Default: Green
+static int difficulty = 2;                   // Default: Medium
+static Color cpuColor = {0, 255, 0, 255};    // Default: Green
 
 void cpu_init(CPU *cpu) {
-  cpu->width = 20;
-  cpu->height = 100;
-  cpu->x = WINDOW_WIDTH - 40;
+  cpu->width = 1;
+  cpu->height = 4;
+  cpu->x = WINDOW_WIDTH - 3;
   cpu->y = (WINDOW_HEIGHT - cpu->height) / 2;
-  cpu->speed = 3; // Base speed, will be adjusted by difficulty
+  cpu->speed = 1; // Base speed, will be adjusted by difficulty
   cpu->color = cpuColor;
   cpu->difficulty = difficulty;
 }
@@ -20,13 +20,13 @@ void cpu_update(CPU *cpu, Ball *ball) {
   // Adjust CPU speed based on difficulty
   switch (cpu->difficulty) {
   case 1: // Easy
-    cpu->speed = 3;
+    cpu->speed = 1;
     break;
   case 2: // Medium
-    cpu->speed = 5;
+    cpu->speed = 1;
     break;
   case 3: // Hard
-    cpu->speed = 7;
+    cpu->speed = 2;
     break;
   }
 
@@ -38,17 +38,17 @@ void cpu_update(CPU *cpu, Ball *ball) {
     // Only move if the ball is moving towards the CPU
     if (ball->velocityX > 0) {
       // Move towards the predicted position
-      if (targetY < (float)(cpu->y + cpu->height / 2) - 10.0f) {
+      if (targetY < (float)(cpu->y + cpu->height / 2) - 1.0F) {
         cpu->y -= cpu->speed;
-      } else if (targetY > (float)(cpu->y + cpu->height / 2) + 10.0f) {
+      } else if (targetY > (float)(cpu->y + cpu->height / 2) + 1.0F) {
         cpu->y += cpu->speed;
       }
     }
   } else {
     // Hard difficulty: better prediction, faster movement
-    if (targetY < (float)(cpu->y + cpu->height / 2) - 5.0f) {
+    if (targetY < (float)(cpu->y + cpu->height / 2) - 0.5F) {
       cpu->y -= cpu->speed;
-    } else if (targetY > (float)(cpu->y + cpu->height / 2) + 5.0f) {
+    } else if (targetY > (float)(cpu->y + cpu->height / 2) + 0.5F) {
       cpu->y += cpu->speed;
     }
   }
@@ -62,16 +62,16 @@ void cpu_update(CPU *cpu, Ball *ball) {
 }
 
 void cpu_render(CPU *cpu) {
-  SDL_Rect paddleRect = {cpu->x, cpu->y, cpu->width, cpu->height};
-  SDL_SetRenderDrawColor(gui_get_renderer(), cpu->color.r, cpu->color.g,
-                         cpu->color.b, cpu->color.a);
-  SDL_RenderFillRect(gui_get_renderer(), &paddleRect);
+  // Draw the paddle as a vertical line of characters
+  for (int i = 0; i < cpu->height; i++) {
+    gui_draw_text("#", cpu->x, cpu->y + i, false);
+  }
 }
 
 void cpu_set_difficulty(int newDifficulty) { difficulty = newDifficulty; }
 
 int cpu_get_difficulty(void) { return difficulty; }
 
-void cpu_set_color(SDL_Color color) { cpuColor = color; }
+void cpu_set_color(Color color) { cpuColor = color; }
 
-SDL_Color cpu_get_color(void) { return cpuColor; }
+Color cpu_get_color(void) { return cpuColor; }

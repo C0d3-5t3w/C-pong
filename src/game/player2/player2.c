@@ -3,15 +3,15 @@
 #include "../../main.h"
 #include "controls/controls.h"
 
-// Movement flags
-static SDL_Color playerColor = {0, 0, 255, 255}; // Default: Blue
+// Default color for player2
+static Color playerColor = {0, 0, 255, 255}; // Blue
 
 void player2_init(Player *player) {
-  player->width = 20;
-  player->height = 100;
-  player->x = WINDOW_WIDTH - 40;
+  player->width = 1;
+  player->height = 4;
+  player->x = WINDOW_WIDTH - 3;
   player->y = (WINDOW_HEIGHT - player->height) / 2;
-  player->speed = 5;
+  player->speed = 1;
   player->color = playerColor;
   
   player2_controls_init();
@@ -29,17 +29,17 @@ void player2_update(Player *player) {
 }
 
 void player2_render(Player *player) {
-  SDL_Rect paddleRect = {player->x, player->y, player->width, player->height};
-  SDL_SetRenderDrawColor(gui_get_renderer(), player->color.r, player->color.g,
-                         player->color.b, player->color.a);
-  SDL_RenderFillRect(gui_get_renderer(), &paddleRect);
+  // Draw the paddle as a vertical line of characters
+  for (int i = 0; i < player->height; i++) {
+    gui_draw_text("#", player->x, player->y + i, false);
+  }
 }
 
-void player2_handle_event(SDL_Event *event, Player *player) {
+void player2_handle_event(Event *event, Player *player) {
   (void)player; // Unused parameter
   player2_controls_handle_event(event);
 }
 
-void player2_set_color(SDL_Color color) { playerColor = color; }
+void player2_set_color(Color color) { playerColor = color; }
 
-SDL_Color player2_get_color(void) { return playerColor; }
+Color player2_get_color(void) { return playerColor; }

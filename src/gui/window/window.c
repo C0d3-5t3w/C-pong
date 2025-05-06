@@ -1,29 +1,26 @@
 #include "window.h"
 #include "../../main.h"
+#include <stdio.h>
 
-static SDL_Window *window = NULL;
 static int window_width = WINDOW_WIDTH;
 static int window_height = WINDOW_HEIGHT;
 
 bool window_init(const char *title, int width, int height) {
+  (void)title; // Unused in terminal mode
+  
   window_width = width;
   window_height = height;
-
-  window =
-      SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       width, height, SDL_WINDOW_SHOWN);
-
-  return (window != NULL);
+  
+  // Clear the terminal screen
+  printf("\033[2J\033[H");
+  
+  return true;
 }
 
 void window_cleanup(void) {
-  if (window) {
-    SDL_DestroyWindow(window);
-    window = NULL;
-  }
+  // Reset cursor position
+  printf("\033[H");
 }
-
-SDL_Window *window_get(void) { return window; }
 
 int window_get_width(void) { return window_width; }
 

@@ -9,26 +9,22 @@
 #include <string.h>
 #include <unistd.h> // for usleep
 
-#include "config/config.h"
-#include "game/game.h"
-#include "gui/gui.h"
-
 #define WINDOW_WIDTH 80
 #define WINDOW_HEIGHT 24
 #define FPS 10
 #define FRAME_DELAY (1000 / FPS)
 
-// Custom color structure to replace SDL_Color
+// Custom color structure 
 typedef struct {
     unsigned char r, g, b, a;
 } Color;
 
-// Custom rectangle structure to replace SDL_Rect
+// Custom rectangle structure
 typedef struct {
     int x, y, w, h;
 } Rectangle;
 
-// Custom event structure to replace SDL_Event
+// Custom event structure
 typedef struct {
     int type;
     struct {
@@ -57,9 +53,24 @@ typedef enum { STATE_MENU, STATE_GAME, STATE_SETTINGS, STATE_EXIT } GameState;
 
 extern GameState currentState;
 
-// Function prototypes for core functionality
+// Function prototypes
 bool poll_event(Event* event);
-void delay_ms(int ms);
+void delay_milliseconds(int milliseconds);
 unsigned int get_ticks(void);
+
+// Forward declarations for menu functions
+void menu_init(void);
+void menu_handle_event(Event* event);
+void menu_update(void);
+void menu_render(void);
+
+// Forward declarations for settings functions
+void settings_init(void);
+void settings_handle_event(Event* event);
+void settings_update(void);
+void settings_render(void);
+
+// Forward declarations for scores functions
+bool scores_save(void);
 
 #endif // MAIN_H
