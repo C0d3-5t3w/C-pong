@@ -6,6 +6,7 @@
 #include "cpu/cpu.h"
 #include "scores/scores.h"
 #include <math.h>
+#include <SDL2/SDL_ttf.h>
 
 // Game objects
 static Ball ball;

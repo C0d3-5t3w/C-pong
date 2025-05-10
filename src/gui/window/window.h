@@ -1,13 +1,14 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <SDL2/SDL.h>
 #include <stdbool.h>
 
-// Console window functions
+// Window functions
 bool window_init(const char* title, int width, int height);
 void window_cleanup(void);
 int window_get_width(void);
 int window_get_height(void);
-void window_clear(void);  // Add a clear function for consistency
+SDL_Window* window_get_sdl_window(void);
 
 #endif // WINDOW_H

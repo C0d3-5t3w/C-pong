@@ -4,10 +4,27 @@ project(C_Pong C)
 # Set C standard
 set(CMAKE_C_STANDARD 99)
 
+# Find SDL2 packages - be more explicit with paths
+set(SDL2_DIR "/opt/homebrew/lib/cmake/SDL2" CACHE PATH "Path to SDL2Config.cmake")
+set(SDL2_TTF_DIR "/opt/homebrew/lib/cmake/SDL2_ttf" CACHE PATH "Path to SDL2_ttfConfig.cmake")
+
+find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+
 # Include directories
 include_directories(
+    ${SDL2_INCLUDE_DIRS}
+    ${SDL2_TTF_INCLUDE_DIRS}
+    # Add fallback paths for SDL2_ttf in case the above doesn't work
+    /usr/include/SDL2
+    /usr/local/include/SDL2
+    /opt/homebrew/include/SDL2
+    /opt/local/include/SDL2
     src/
 )
+
+# Define a flag for SDL_TTF availability
+add_definitions(-DSDL_TTF_INCLUDED)
 
 # Source files
 file(GLOB_RECURSE SOURCES 
@@ -19,6 +36,8 @@ add_executable(pong ${SOURCES})
 
 # Link libraries
 target_link_libraries(pong 
+    ${SDL2_LIBRARIES}
+    ${SDL2_TTF_LIBRARIES}
     m
 )
 

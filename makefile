@@ -1,6 +1,10 @@
 CC = clang
-CFLAGS = -Wall -Wextra -std=c99 -D_USE_MATH_DEFINES
-LDFLAGS = -lm
+# More comprehensive include paths
+SDL_INCLUDE_DIRS = -I/usr/include/SDL2 -I/usr/local/include/SDL2 -I/opt/homebrew/include/SDL2 -I/opt/local/include/SDL2
+CFLAGS = -Wall -Wextra -std=c99 -D_USE_MATH_DEFINES $(SDL_INCLUDE_DIRS) -DSDL_TTF_INCLUDED
+# Add library paths to help the linker
+SDL_LIB_DIRS = -L/usr/lib -L/usr/local/lib -L/opt/homebrew/lib -L/opt/local/lib
+LDFLAGS = $(SDL_LIB_DIRS) -lSDL2 -lSDL2_ttf -lm
 
 SRC_DIR = src
 BUILD_DIR = bin
@@ -40,8 +44,3 @@ help:
 	@echo "  make run        Build and run the project"
 	@echo "  make clean      Clean build files"
 	@echo "  make help       Show this help message"
-	@echo ""
-	@echo "Environment Variables:"
-	@echo "  CC              Compiler to use (default: clang)"
-	@echo "  CFLAGS          Compiler flags (default: -Wall -Wextra -std=c99 -D_USE_MATH_DEFINES)"
-	@echo "  LDFLAGS         Linker flags (default: -lm)"
