@@ -6,7 +6,7 @@
 #include "cpu/cpu.h"
 #include "scores/scores.h"
 #include <math.h>
-#include <SDL2/SDL_ttf.h>
+#include "../sdl_includes.h"  // Use our central include file instead
 
 // Game objects
 static Ball ball;

@@ -49,7 +49,11 @@ void draw_line(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, SDL_Color
 }
 
 void draw_text(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y, SDL_Color color, bool centered) {
-  SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
+  if (!font) {
+    return;  // Early return if font is NULL
+  }
+
+  SDL_Surface* surface = TTF_RenderUTF8_Solid(font, text, color);
   if (!surface) {
     return;
   }

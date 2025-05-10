@@ -11,15 +11,14 @@ set(SDL2_TTF_DIR "/opt/homebrew/lib/cmake/SDL2_ttf" CACHE PATH "Path to SDL2_ttf
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
-# Include directories
+# Include directories - add more potential paths for SDL2_ttf
 include_directories(
     ${SDL2_INCLUDE_DIRS}
     ${SDL2_TTF_INCLUDE_DIRS}
-    # Add fallback paths for SDL2_ttf in case the above doesn't work
-    /usr/include/SDL2
-    /usr/local/include/SDL2
-    /opt/homebrew/include/SDL2
-    /opt/local/include/SDL2
+    /usr/include
+    /usr/local/include
+    /opt/homebrew/include
+    /opt/local/include
     src/
 )
 
